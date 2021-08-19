@@ -1,0 +1,80 @@
+{% extends "pagestructure.html" %}
+{% block content %}
+<head>
+    <style>
+    *{
+        box-sizing: border-box;
+    }
+    body{
+        background-color: lightgrey;
+        font-family: 'Open Sans' sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+    .container{
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        width: 400px;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    .header{
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px 40px;
+    }
+    .header h2{
+        background-color: #9b59b6;
+    margin: 0;
+    }
+    .form{
+    padding: 30px 40px;
+    }
+    .form-control{
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+    position: relative;
+    }
+    .btn-info{
+    background-color: #8e44ad;
+    border: 2px solid #8e44ad;
+    border-radius: 4px;
+    color: #fff;
+    display: block;
+    font-family:inherit;
+    font-size:16px;
+    padding:10px;
+    width:100%;
+    }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="header">
+                    <h2>Register User</h2>
+                </div>
+                {% from "formfieldvalidator.html" import render_field %}
+                <form method=post>
+                    {{ form.csrf_token }}
+                <div>
+                    {{ render_field(form.name, class="form-control") }}
+                    {{ render_field(form.username, class="form-control") }}
+                    {{ render_field(form.email, class="form-control") }}
+                    {{ render_field(form.password, class="form-control") }}
+                    {{ render_field(form.confirm, class="form-control") }}
+                    
+                </div>
+                <p><input type="submit" value="Register" class="btn-info">
+                </form>
+            </div>
+      <div class="col-md-3"></div>
+    </div>
+</div>
+{% endblock content %}
+</body>

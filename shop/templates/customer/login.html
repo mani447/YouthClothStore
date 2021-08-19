@@ -1,0 +1,83 @@
+{% extends "pagestructure.html" %}
+{% block content %}
+<head>
+    <style>
+    *{
+        box-sizing: border-box;
+    }
+    body{
+        background-color: lightgrey;
+        font-family: 'Open Sans' sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+    .container{
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        width: 400px;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    .header{
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px 40px;
+    }
+    .header h2{
+    margin: 0;
+    }
+    .form{
+    padding: 30px 40px;
+    }
+    .form-control{
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+    position: relative;
+    }
+    .btn-info{
+    background-color: #8e44ad;
+    border: 2px solid #8e44ad;
+    border-radius: 4px;
+    color: #fff;
+    display: block;
+    font-family:inherit;
+    font-size:16px;
+    padding:10px;
+    width:100%;
+    }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="header float-right p-2">
+                    <h2>Customer</h2>
+                </div>
+                {% from "formfieldvalidator.html" import render_field %}
+                {% include 'alerts.html' %}
+                <form method=post>
+                    {{form.csrf_token}}
+                <div>
+                    {{ render_field(form.email, class="form-control") }}
+                    {{ render_field(form.password, class="form-control") }}
+                </div>
+                <p><input type="submit" value="Login" class="btn-info">
+                </form>
+                    <div class="text-left font-weight-bold ml-0 p-0 pt-2">
+                    <a href="{{url_for('admin')}}" class="pt-1"><button value="adminlogin" class="btn btn-info btn-sm" >Admin Login</button></a>
+                    </div>
+                    <div class="text-left font-weight-bold ml-0 p-0 pt-2">
+                    <a href="{{url_for('customer_register')}}" class="pt-1"><button value="register" class="btn btn-info btn-sm" >Register</button></a>
+                    </div>
+            </div>
+      <div class="col-md-3"></div>
+    </div>
+</div>
+</body>
+{% endblock content %}

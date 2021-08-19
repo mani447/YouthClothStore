@@ -1,0 +1,187 @@
+{% extends 'pagestructure.html' %}
+{% block content %}
+{% include 'menubar.html' %}
+<div class="container">
+    <div class="row">
+        {% if brand %}
+         {% for brand_ in brand.items %}
+        <div class="col-md-3 mt-4">
+            <div class="card pl-5 pr-5">
+                <img src="{{url_for('static', filename='images/' + brand_.image_1)}}" class="card-img-top" alt="{{brand_.name}}" height="200" width="200">
+                <div class="card-body">
+                {% if brand_.stock == 0 %}
+                 <h5 style="text-shadow: 1px 2px 2px #000; color: #f00; transform: rotate(-15deg); position: absolute; top: 23%; left: 25%; font-weight: 600;"> OUT OF STOCK </h5>
+                    {% elif brand_.discount >= 1 %}
+                    <h5 style="text-shadow: 1px 2px 2px #000; color: #f00; transform: rotate(-15deg); position: absolute; top: 23%; left: 25%; font-weight: 600;"> {{brand_.discount}}% DISCOUNT!!</h5>
+                    {% endif %}
+                  <h5 class="text-center">{{brand_.name}}</h5>
+                  <p class="text-center">Price ${{brand_.price}}</p>
+                </div>
+                <div class="card-footer" style="width: max-content;">
+                    <a href="{{url_for('productpage',id=brand_.id)}}" class="float-left btn btn-sm btn-info">Details</a>
+                    <form action="{{url_for('AddCart')}}" method="post">
+                      <input type="hidden" name="product_id" value="{{brand_.id}}">
+                      <button type="submit" class="btn btn-sm btn-success float-right">Add to Cart</button>
+                      <input type="hidden" name="quantity" value="1" min="1" max="20">
+                      {% set colors = brand_.colors.split(',') %}
+                      <select name="colors" id="colors" style="visibility: hidden;">
+                          {% for clr in colors %}
+                          {% set col = clr.split(':') %}
+                            <option value="{{col[0]}}">{{ col[0] | capitalize }}</option>
+                          {% endfor %}
+                      </select>
+                  </form>
+                </div>
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+    
+    <div class="row mt-4">
+      <div class="col text-center">
+        {% if brand.has_prev %}
+          <a href="{{url_for('reqBrand',id=reqBrand.id, page=brand.prev_num)}}"class="btn btn-sm btn-outline-info">previus</a>
+        {% endif %}
+        {% if brand.total > 8 %}
+       {% for pgn in brand.iter_pages(left_edge=1, right_edge=2, left_current=1,right_current=2) %}
+       {% if pgn %}
+         {% if not pgn == brand.page %}
+            <a href="{{url_for('reqBrand',id=reqBrand.id, page=pgn)}}" class="btn btn-sm btn-outline-info">{{pgn}}</a>
+         {% else %}
+             <a href="{{url_for('reqBrand',id=reqBrand.id, page=pgn)}}" class="btn btn-sm btn-info">{{pgn}}</a>
+          {% endif %}
+        {% else %}
+        .....
+        {% endif %}
+       {% endfor %}
+       {% endif %}
+       {% if brand.has_next %}
+       <a href="{{url_for('reqBrand',id=reqBrand.id, page=brand.next_num)}}"class="btn btn-sm btn-outline-info">next</a>
+     {% endif %}
+      </div>
+    </div>
+
+    <div class="row">
+        {% elif prodInCat %}
+        {% for prodInCatg in prodInCat.items %}
+        <div class="col-md-3 mt-4">
+            <div class="card">
+                <img src="{{url_for('static', filename='images/' + prodInCatg.image_1)}}" class="card-img-top" alt="{{prodInCatg.name}}" height="200" width="200">
+                <div class="card-body">
+                {% if prodInCatg.stock == 0 %}
+                 <h5 style="text-shadow: 1px 2px 2px #000; color: #f00; transform: rotate(-15deg); position: absolute; top: 23%; left: 25%; font-weight: 600;"> OUT OF STOCK </h5>
+                    {% elif prodInCatg.discount >= 1 %}
+                    <h5 style="text-shadow: 1px 2px 2px #000; color: #f00; transform: rotate(-15deg); position: absolute; top: 23%; left: 25%; font-weight: 600;"> {{prodInCatg.discount}}% DISCOUNT!!</h5>
+                    {% endif %}
+                  <h5 class="text-center">{{prodInCatg.name}}</h5>
+                  <p class="text-center">Price ${{prodInCatg.price}}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{url_for('productpage', id=prodInCatg.id)}}" class="float-left btn btn-sm btn-info">Details</a>
+                    <form action="{{url_for('AddCart')}}" method="post">
+                      <input type="hidden" name="product_id" value="{{prodInCatg.id}}">
+                      <button type="submit" class="btn btn-sm btn-success float-right">Add to Cart</button>
+                      <input type="hidden" name="quantity" value="1" min="1" max="20">
+                      {% set colors = prodInCatg.colors.split(',') %}
+                      <select name="colors" id="colors" style="visibility: hidden;">
+                          {% for clr in colors %}
+                          {% set col = clr.split(':') %}
+                          <option value="{{col[0]}}">{{col[0] | capitalize }}</option>
+                          {% endfor %}
+                      </select>
+                  </form>
+                </div>
+            </div>
+          </div>
+
+        {% endfor %}
+      </div>
+
+      <div class="row mt-4">
+        <div class="col text-center">
+          {% if prodInCat.has_prev %}
+            <a href="{{url_for('getProdInCat',id=prodInCatg.id, page=prodInCat.prev_num)}}"class="btn btn-sm btn-outline-info">previus</a>
+          {% endif %}
+          {% if prodInCat.total > 8 %}
+         {% for page_num in prodInCat.iter_pages(left_edge=1, right_edge=2, left_current=1,right_current=2) %}
+         {% if page_num %}
+           {% if prodInCat.page == page_num %}
+           <a href="{{url_for('getProdInCat',id=prodInCatg.id, page=page_num)}}" class="btn btn-sm btn-info">{{page_num}}</a>
+           {% else %}
+           <a href="{{url_for('getProdInCat',id=prodInCatg.id, page=page_num)}}" class="btn btn-sm btn-outline-info">{{page_num}}</a>
+            {% endif %}
+          {% else %}
+          ...
+          {% endif %}
+         {% endfor %}
+         {% endif %}
+         {% if prodInCat.has_next %}
+         <a href="{{url_for('home', page=prodInCat.next_num)}}"class="btn btn-sm btn-outline-info">next</a>
+       {% endif %}
+        </div>
+      </div>
+
+
+        <div class="row">
+         {% else %}
+        {% for product in products.items %}
+      <div class="col-md-3 mt-4">
+        <div class="card">
+            <img src="{{url_for('static', filename='images/' + product.image_1)}}" class="card-img-top" alt="{{product.name}}" height="200" width="200">
+            <div class="card-body">
+            {% if product.stock == 0 %}
+                 <h5 style="text-shadow: 1px 2px 2px #000; color: #f00; transform: rotate(-15deg); position: absolute; top: 23%; left: 25%; font-weight: 600;"> OUT OF STOCK </h5>
+                {% elif product.discount >= 1 %}
+                <h5 style="text-shadow: 1px 2px 2px #000; color: #f00; transform: rotate(-15deg); position: absolute; top: 23%; left: 25%; font-weight: 600;"> {{product.discount}}% DISCOUNT!!</h5>
+                {% endif %}
+              <h5 class="text-center">{{product.name}}</h5>
+              <p class="text-center">Price ${{product.price}}</p>
+            </div>
+            <div class="card-footer">
+                <a href="{{url_for('productpage',id=product.id)}}" class="float-left btn btn-sm btn-info">Details</a>
+                <form action="{{url_for('AddCart')}}" method="post">
+                  <input type="hidden" name="product_id" value="{{product.id}}">
+                  <button type="submit" class="btn btn-sm btn-success float-right">Add to Cart</button>
+                  <input type="hidden" name="quantity" value="1" min="1" max="20">
+                  {% set colors = product.colors.split(',') %}
+                  <select name="colors" id="colors" style="visibility: hidden;">
+                      {% for color in colors %}
+                      {% set col = color.split(':') %}
+                      <option value="{{col[0]}}">{{col[0] | capitalize }}</option>
+                      {% endfor %}
+                  </select>
+              </form>
+            </div>
+        </div>
+      </div>
+        {% endfor %}
+      </div>
+
+      <div class="row mt-4">
+        <div class="col text-center">
+          {% if products.has_prev %}
+            <a href="{{url_for('home', page=products.prev_num)}}"class="btn btn-sm btn-outline-info">previus</a>
+          {% endif %}
+          {% if products.total > 8 %}
+         {% for page_num in products.iter_pages(left_edge=1, right_edge=2, left_current=1,right_current=2) %}
+         {% if page_num %}
+           {% if products.page == page_num %}
+           <a href="{{url_for('home', page=page_num)}}" class="btn btn-sm btn-info">{{page_num}}</a>
+           {% else %}
+           <a href="{{url_for('home', page=page_num)}}" class="btn btn-sm btn-outline-info">{{page_num}}</a>
+            {% endif %}
+          {% else %}
+          ...
+          {% endif %}
+         {% endfor %}
+         {% endif %}
+         {% if products.has_next %}
+         <a href="{{url_for('home', page=products.next_num)}}"class="btn btn-sm btn-outline-info">next</a>
+       {% endif %}
+        </div>
+      </div>
+
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
